@@ -48,11 +48,9 @@ def main():
     print(__doc__.splitlines()[1], "\n")
 
     data = init()
-    old = part_1(data)
-    otcp = part_2(data)
 
-    print("   Valid passwords (old method):", old)
-    print("  Valid passwords (OTCP method):", otcp)
+    print("   Valid passwords (old method):", part_1(data))
+    print("  Valid passwords (OTCP method):", part_2(data))
 
 
 if __name__ == "__main__":

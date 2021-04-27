@@ -5,3 +5,6 @@ Today looks like a 2-sum and 3-sum problem. Played with a few different implemen
 
 ## Day 2: Password Philosophy
 Pretty simple filtering. Left some earlier code in comments, and reworked to match my new init(), part_1(), part_2() format.
+
+## Day 3: Toboggan Trajectory
+Count trees on a repeating ASCII mountain. Although I was tempted to put the trees into a set to check for count/collisions, it felt better to leave the data as a list of strings instead.
