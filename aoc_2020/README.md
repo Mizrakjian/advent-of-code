@@ -8,3 +8,6 @@ Pretty simple filtering. Left some earlier code in comments, and reworked to mat
 
 ## Day 3: Toboggan Trajectory
 Count trees on a repeating ASCII mountain. Although I was tempted to put the trees into a set to check for count/collisions, it felt better to leave the data as a list of strings instead.
+
+## Day 4: Passport Processing
+Another data testing / filtering puzzle. Put all of my tests into a dictionary to encapsulate the tests from the rest of the logic. After a few revisions, I added a regular expression to shorten test code.
