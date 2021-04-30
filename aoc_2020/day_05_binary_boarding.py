@@ -24,8 +24,8 @@ def part_1(seat_ids: set) -> int:
 
 def part_2(seat_ids: set) -> int:
     """Return "your" seat ID - inside the range of all IDs but not in the set."""
-    seat_min, seat_max = min(seat_ids), max(seat_ids)
-    return (seat_ids ^ {*range(seat_min, seat_max + 1)}).pop()
+    valid_range = {*range(min(seat_ids), max(seat_ids) + 1)}
+    return (seat_ids ^ valid_range).pop()
 
 
 def main():
