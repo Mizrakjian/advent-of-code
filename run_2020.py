@@ -23,17 +23,22 @@ def scale(time: int, precision: int = 0) -> str:
 
 
 def print_time(msg: str, func: Callable, data="") -> int:
-    """Return results from func after printing msg, results, and runtime of func."""
+    """Return int results from func after printing msg, results, and runtime of func."""
+    print(f"  {msg}", end="", flush=True)
+
     start = perf_counter_ns()
-    result = func(data) if data != "" else func()
+    result = func(data) if data else func()
     runtime = perf_counter_ns() - start
-    msg += str(result) if data != "" else ""
-    print(f"  {msg} [{scale(runtime)}]")
+
+    msg = f" {str(result)}" if data else ""
+    print(f"{msg} [{scale(runtime)}]")
     return result
 
 
 search_path = ["."]  # set to None to see all modules importable from sys.path
 aoc_2020 = [x[1] for x in pkgutil.iter_modules(path=search_path)]
+
+print(aoc_2020)
 
 for day in aoc_2020:
     day = __import__(day)
@@ -41,5 +46,5 @@ for day in aoc_2020:
 
     data = print_time("Init", day.init)
 
-    print_time("Part 1: ", day.part_1, data)
-    print_time("Part 2: ", day.part_2, data)
+    print_time("Part 1:", day.part_1, data)
+    print_time("Part 2:", day.part_2, data)

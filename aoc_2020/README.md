@@ -31,3 +31,6 @@ def id_seat(boarding_pass: str) -> int:
 
 ## Day 6: Custom Customs
 Originally solved with list comps, I landed on using sets and set comps here for easier and faster filtering. This resulted in very short and dense, but readable code.
+
+## Day 7: Handy Haversacks
+A recursive luggage problem. Stumped on solving one of 2019's advent puzzles, I found code from someone who solved that problem with a queue instead of recursively and have been using a similar method for similar problems since then. I should probably put up a recursive verion for this day as well.
