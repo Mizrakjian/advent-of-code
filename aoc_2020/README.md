@@ -28,3 +28,6 @@ def id_seat(boarding_pass: str) -> int:
     index_bsp = enumerate(reversed(boarding_pass.strip()))
     return sum((bit in "BR") << exp for exp, bit in index_bsp)
 ```
+
+## Day 6: Custom Customs
+Originally solved with list comps, I landed on using sets and set comps here for easier and faster filtering. This resulted in very short and dense, but readable code.
