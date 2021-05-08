@@ -1,7 +1,28 @@
 # Advent of Code 2020 Notes
 
 ## Day 1: Report Repair
-Today looks like a 2-sum and 3-sum problem. Played with a few different implementations before settling on using itertools.combinations. Not the fastest way to go, but the code is clean and easy to read.
+Today looks like a 2-sum and 3-sum problem. Played with a few different implementations before settling on using itertools.combinations. I wanted both parts to be solved with one scalable function:
+```python
+def x_sum_prod(array: list, items: int, target: int) -> int:
+    """Return the product of array items that sum to target. If not found, return -1."""
+    for combo in combinations(array, r=items):
+        if sum(combo) == target:
+            return prod(combo)
+    return -1
+```
+Not the fastest way to go, but the code is clean and easy to read. But, it didn't take me long to want to improve the performance, so I modified the function to remove one nested loop and also changed the input data from list to set for faster membership testing:
+```python
+def x_sum_prod(array: set, items: int, target: int) -> int:
+    """
+    Return the product of items number of array elements that sum to target.
+    If not found, return -1.
+    """
+    for combo in combinations(array, r=items - 1):
+        result = target - sum(combo)
+        if result in array:
+            return result * prod(combo)
+    return -1
+```
 
 ## Day 2: Password Philosophy
 Pretty simple filtering. Left some earlier code in comments, and reworked to match my new init(), part_1(), part_2() format.
