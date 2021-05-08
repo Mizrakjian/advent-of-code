@@ -38,8 +38,6 @@ def print_time(msg: str, func: Callable, data="") -> int:
 search_path = ["."]  # set to None to see all modules importable from sys.path
 aoc_2020 = [x[1] for x in pkgutil.iter_modules(path=search_path)]
 
-print(aoc_2020)
-
 for day in aoc_2020:
     day = __import__(day)
     print("\n" + day.__doc__.splitlines()[1])
