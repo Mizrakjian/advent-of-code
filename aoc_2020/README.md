@@ -60,7 +60,7 @@ A recursive luggage problem. Stumped on solving one of 2019's advent puzzles, I 
 Simple virtual machine type problem, but nothing like the recurring int comp puzzles from last year. I might want to tackle this with 3.10's pattern matching at some point.
 
 ## Day 9: Encoding Error
-Sort of a twist on a 2-sum problem. I don't remember much struggle from this day's puzzle, but when I updated the code to work with my timing/testing script I refined part 2 to improve performance by removing a few obvious inefficiencies. Originally looking like this:
+Sort of a twist on a 2-sum problem. I don't remember much struggle from this day's puzzle, but when I updated the code to work with my timing/testing script I refined part two to improve performance by removing a few obvious inefficiencies. Originally looking like this:
 ```python
 def find_weakness(xmas: tuple, target: int) -> int:
     """Return the sum of the min and max elements of the slice that sums to target."""
@@ -92,3 +92,6 @@ def find_weakness(xmas: tuple, target: int) -> int:
     return min(xmas[left:right]) + max(xmas[left:right])
 ```
 For my dataset the original function needed 498 iterations of the while loop to find the answer. The updated one only needs 58.
+
+## Day 10: Adapter Array
+I remember this one. Part one was easy and took almost no time to answer. Part two had me stumped, and I went down several dead ends before looking for solutions online. Though if I had stuck with it, I think I was on the right track with one of my ideas.
