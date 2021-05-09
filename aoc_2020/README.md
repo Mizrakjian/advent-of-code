@@ -58,3 +58,37 @@ A recursive luggage problem. Stumped on solving one of 2019's advent puzzles, I 
 
 ## Day 8: Handheld Halting
 Simple virtual machine type problem, but nothing like the recurring int comp puzzles from last year. I might want to tackle this with 3.10's pattern matching at some point.
+
+## Day 9: Encoding Error
+Sort of a twist on a 2-sum problem. I don't remember much struggle from this day's puzzle, but when I updated the code to work with my timing/testing script I refined part 2 to improve performance by removing a few obvious inefficiencies. Originally looking like this:
+```python
+def find_weakness(xmas: tuple, target: int) -> int:
+    """Return the sum of the min and max elements of the slice that sums to target."""
+    right = xmas.index(target) - 1
+    left = right - 1
+    while (current := sum(xmas[left:right])) != target:
+        if current > target:
+            right -= 1
+            left = right
+        left -= 1
+    return min(xmas[left:right]) + max(xmas[left:right])
+```
+It was starting its search near the index of the target, because that was better than starting at either end, but starting at the index nearest target / 2 is better. Also, I think I was being too cautious by resetting the length of the search slice to 2 each time the current sum went over the target. Finally, I was summing the entire slice on each loop and that was probably inefficient as well. Making those changes resulted in this:
+```python
+def find_weakness(xmas: tuple, target: int) -> int:
+    """Return the sum of the min and max elements of the slice that sums to target."""
+
+    start = next(i for i, x in enumerate(xmas) if x >= target // 2)
+    left, right = start - 1, start
+    current = sum(xmas[left:right])
+
+    while current != target:
+        if current > target:
+            right -= 1
+            current -= xmas[right]
+        left -= 1
+        current += xmas[left]
+
+    return min(xmas[left:right]) + max(xmas[left:right])
+```
+For my dataset the original function needed 498 iterations of the while loop to find the answer. The updated one only needs 58.
