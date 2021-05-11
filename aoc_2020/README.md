@@ -95,3 +95,80 @@ For my dataset the original function needed 498 iterations of the while loop to 
 
 ## Day 10: Adapter Array
 I remember this one. Part one was easy and took almost no time to answer. Part two had me stumped, and I went down several dead ends before looking for solutions online. Though if I had stuck with it, I think I was on the right track with one of my ideas.
+
+## Day 11: Seating System
+This was a fun day to play with and optimize. Basically a play on Conway's Game of Life. When preparing to upload this, I refactored for performance and readability. Originally written within a class, the main neighbor checking loop looked like this:
+```python
+    def nearby_seats(self, r: int, c: int, adjacent_only: bool) -> int:
+        occupied = 0
+        for move_row, move_col in product(range(-1, 2), repeat=2):
+            if move_row == move_col == 0:
+                continue
+            row, col = r + move_row, c + move_col
+            while 0 <= row < self.height and 0 <= col < self.width:
+                if self.seats[row][col] != ".":
+                    occupied += self.seats[row][col] == "#"
+                    break
+                if adjacent_only == True:
+                    break
+                row += move_row
+                col += move_col
+        return occupied
+```
+After killing the class and refactoring into two more streamlined functions:
+```python
+def nearby(seats: dict, x: int, y: int) -> int:
+    """Return count of nearby occupied seats (incluing origin seat if occupied)."""
+    occupied = 0
+
+    for x_move, y_move in product((-1, 0, 1), repeat=2):
+        nearby = x + x_move, y + y_move
+        while seats.get(nearby) == ".":
+            nearby = nearby[0] + x_move, nearby[1] + y_move
+        occupied += seats.get(nearby) == "#"
+
+    return occupied
+
+
+def adjacent(seats: dict, x: int, y: int) -> int:
+    """Return count of adjacent occupied seats (incluing origin seat if occupied)."""
+    adjacent = product(range(x - 1, x + 2), range(y - 1, y + 2))
+    return sum(seats.get(spot) == "#" for spot in adjacent)
+```
+Though I split the original code into two similar functions, there isn't much overt code duplication. Splitting the functions also allowed for the removal of conditionals in these innermost loops which resulted in a fair overall performance boost.
+
+Those changes rippled into the main update loop and help to take it from this:
+```python
+    def update(self, adjacent_only: bool) -> int:
+        for row, col in product(range(self.height), range(self.width)):
+            seat = self.seats[row][col]
+            if seat == ".":
+                continue
+            occupied = self.nearby_seats(row, col, adjacent_only)
+            if seat == "L" and occupied == 0:
+                self.buffer[row][col] = "#"
+            elif seat == "#" and occupied > 4 - adjacent_only:
+                self.buffer[row][col] = "L"
+
+        self.seats = [[*row] for row in self.buffer]
+        return sum(row.count("#") for row in self.seats)
+```
+To this much less busy version:
+```python
+def update(seats: dict, count_neighbors: Callable) -> dict:
+    """Return dict of new seat state after simulating seat occupancy."""
+    state = seats.copy()
+    floor, empty, taken = ".L#"
+    max_occupancy = 5 - (count_neighbors is adjacent)
+
+    for seat, status in seats.items():
+        if status == floor:
+            continue
+        neighbors = count_neighbors(seats, *seat)
+        if status == empty and neighbors == 0:
+            state[seat] = taken
+        elif status == taken and neighbors > max_occupancy:
+            state[seat] = empty
+
+    return state
+```
