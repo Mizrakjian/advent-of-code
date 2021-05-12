@@ -172,3 +172,14 @@ def update(seats: dict, count_neighbors: Callable) -> dict:
 
     return state
 ```
+## Day 12: Rain Risk
+This was another easy one. Most of the fun was in the refactoring. One of the ways I like to deal with coordinate based puzzles is to use complex numbers as 2D vectors. I'm happiest with the way they allowed me to code the waypoint turning in part two:
+```python
+elif action in "LR":
+    if value == 180:
+        waypoint *= -1
+        continue
+    waypoint = complex(-waypoint.imag, waypoint.real)  # rotate 90 deg right
+    if (value == 270) ^ (action == "L"):
+        waypoint *= -1  # if 270 deg xor left: flip the previous quarter turn
+```
