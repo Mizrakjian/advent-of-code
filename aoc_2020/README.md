@@ -183,3 +183,5 @@ elif action in "LR":
     if (value == 270) ^ (action == "L"):
         waypoint *= -1  # if 270 deg xor left: flip the previous quarter turn
 ```
+## Day 13: Shuttle Search
+Some modulo math and alignment of bus schedules today. I do need to think of another way to standardize these scripts other than putting in the same boilerplate part_1 and part_2 functions. I'll do that when I get all my testing up and running. My current implementation will also break on any non-int output so I need to plan for string / ASCII-art output as well.
