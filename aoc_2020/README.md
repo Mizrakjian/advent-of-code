@@ -153,7 +153,7 @@ Those changes rippled into the main update loop and help to take it from this:
         self.seats = [[*row] for row in self.buffer]
         return sum(row.count("#") for row in self.seats)
 ```
-To this much less busy version:
+To this less busy version:
 ```python
 def update(seats: dict, count_neighbors: Callable) -> dict:
     """Return dict of new seat state after simulating seat occupancy."""
@@ -185,3 +185,55 @@ elif action in "LR":
 ```
 ## Day 13: Shuttle Search
 Some modulo math and alignment of bus schedules today. I do need to think of another way to standardize these scripts other than putting in the same boilerplate part_1 and part_2 functions. I'll do that when I get all my testing up and running. My current implementation will also break on any non-int output so I need to plan for string / ASCII-art output as well.
+
+## Day 14: Docking Data
+One of my favorite days yet. Take a bitmask and apply it to some values. Simple enough premise but with a ton of ways to implement it, I had a ton of fun refactoring. I originally solved both parts with string operations and list comprehensions that looked like this:
+```python
+def part_2(code: dict) -> int:
+    mem = {}
+    for mask, ops in code.items():
+        for addr, value in ops:
+            addr = f"{addr:0{36}b}"
+            masked = [m if m != "0" else a for a, m in zip(addr, mask)]
+            float_bits = [i for i, bit in enumerate(mask) if bit == "X"]
+            length = len(float_bits)
+            for float_combo in range(1 << length):
+                float_binary = f"{float_combo:0{length}b}"
+                for i, bit in enumerate(float_bits):
+                    masked[bit] = float_binary[i]
+                mem[int("".join(masked), 2)] = value
+    return sum(mem.values())
+```
+But realized I wanted to practice using bitwise operations. I figured they would also simplify and speed up the code. One middle step looked something like this:
+```python
+def part_2(code: dict) -> int:
+    mem = {}
+    for (mask, show) ops in code.items():
+        for addr, value in ops:
+            floating = [i for i in range(36) if show & (1 << i)]
+            for fill in product((0, 1), repeat=len(floating)):
+                decoded = 0
+                for i, bit in enumerate(floating):
+                    decoded += fill[i] << bit
+                mem[addr & ~show | mask | decoded] = value
+    return sum(mem.values())
+```
+This middle step only had a modest improvement in execution time, but I think it was a little more readable. After trying and discarding a bunch of incremental optimizations to the logic calculating all possible floating addresses (using enumerate, zipping bit-lists together, using map and operator.lshift, etc.) my final version (for now) looks like this:
+```python
+def part_2(prog: Program) -> int:
+    mem = {}
+    for (mask, show), ops in prog.items():
+        floating_bits = [1 << bit for bit in range(36) if show >> bit & 1]
+        floating_sets = [
+            sum(state)
+            for count in range(len(floating_bits) + 1)
+            for state in combinations(floating_bits, count)
+        ]
+        for addr, value in ops:
+            partial_addr = addr & ~show | mask
+            for floating_mask in floating_sets:
+                mem[partial_addr | floating_mask] = value
+
+    return sum(mem.values())
+```
+This version makes a few nice changes, pulls some calculations out of loops, and improves the code performance and readability. The original part_2 function took ~150 ms to complete and this version takes ~20 ms. One optimization I decided to leave out uses the bit_length() of the show mask instead of hardcoding range(36) to lower the number of iterations in the floating_bits list comprehension. The visual clutter just didn't seem worth the minor time gain.
