@@ -237,3 +237,6 @@ def part_2(prog: Program) -> int:
     return sum(mem.values())
 ```
 This version makes a few nice changes, pulls some calculations out of loops, and improves the code performance and readability. The original part_2 function took ~150 ms to complete and this version takes ~20 ms. One optimization I decided to leave out uses the bit_length() of the show mask instead of hardcoding range(36) to lower the number of iterations in the floating_bits list comprehension. The visual clutter just didn't seem worth the minor time gain.
+
+## Day 15: Rambunctious Recitation
+When I saw the description for today's puzzle I remembered watching a [Numberphile video](https://youtu.be/etMJxB-igrc) about Van Eck's sequence. This was pretty easy to code up. After exploring storing the numbers in a dict I ended up using a memory-inefficient list for lookup performance. My pure Python solution took ~4.35 seconds to run, and that felt too slow. While there doesn't seem to be any way to short-circuit iterating results, I dropped in two lines of code to use Numba and cut the total runtime down to ~770ms. I also played with array and numpy, saving memory by specifing data types, but they weren't any faster than stock lists once Numba was introduced.
