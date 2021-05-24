@@ -17,18 +17,17 @@ def find_anomoly(xmas: tuple) -> int:
 def find_weakness(xmas: tuple, target: int) -> int:
     """Return the sum of the min and max elements of the slice that sums to target."""
 
-    start = next(i for i, x in enumerate(xmas) if x >= target // 2)
-    left, right = start - 1, start
-    current = sum(xmas[left:right])
+    left = right = next(i for i, x in enumerate(xmas) if x >= target // 2)
+    current = xmas[left]
 
     while current != target:
         if current > target:
-            right -= 1
             current -= xmas[right]
+            right -= 1
         left -= 1
         current += xmas[left]
 
-    return min(xmas[left:right]) + max(xmas[left:right])
+    return min(xmas[left : right + 1]) + max(xmas[left : right + 1])
 
 
 def init() -> tuple:
